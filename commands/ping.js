@@ -1,8 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const {  SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
-	data: new SlashCommandBuilder().setName('ping').setDescription('Replies with a message becuase you pinged the bot!'),
+	data: new SlashCommandBuilder()
+		.setName('ping')
+		.setDescription('Pong!'),
 	async execute(interaction) {
-		await interaction.reply(`Don't ping me whorerer! 凸(艹皿艹 )`)
-	},
+		interaction.reply('Pong!')
+	}
 }
