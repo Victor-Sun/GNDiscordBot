@@ -31,26 +31,28 @@ module.exports = {
 
 		let defaultItems = getDefaultItems(); 
 		let rolledItems = [];
+		let randomItem = ''
 
 		collector.on('collect', async (ButtonInteraction) => {
 			const id = ButtonInteraction.customId;
 
 			switch (id) {
 				case 'roll':
-					embMessage.edit({ components: [pullButton] });
+					randomItem = getRandomItem(defaultItems, id === 'takeOne' ? true : false)
+					embededMessage.setFields({ name: 'Rolled Items', value: rolledItems.length > 0 ? getEmbdedOutputMessage(rolledItems) : '\u200B' });
+					embededMessage.addField('You rolled: ', randomItem)
+					embMessage.edit({ embeds: [embededMessage], components: [pullButton] });
 					ButtonInteraction.deferUpdate();
 					break;
 				case 'takeOne':
-					const itemRolled = rollItem(defaultItems, rolledItems, true);
+					lowerItemCountInArray(randomItem, defaultItems, rolledItems, true)
 					embededMessage.setFields({ name: 'Rolled Items', value: getEmbdedOutputMessage(rolledItems) });
-					embededMessage.addField('You rolled: ', itemRolled)
 					embMessage.edit({ embeds: [embededMessage], components: [buttons] });
 					ButtonInteraction.deferUpdate();
 					break;
 				case 'takeAll':
-					const itemRolled2 = rollItem(defaultItems, rolledItems, false);
+					lowerItemCountInArray(randomItem, defaultItems, rolledItems, false)
 					embededMessage.setFields({ name: 'Rolled Items', value: getEmbdedOutputMessage(rolledItems) });
-					embededMessage.addField('You rolled: ', itemRolled2)
 					embMessage.edit({ embeds: [embededMessage], components: [buttons] });
 					ButtonInteraction.deferUpdate();
 					break;
@@ -63,7 +65,7 @@ module.exports = {
 					break;
 			}
 		});
-	},
+	}
 };
 
 function getDefaultItems() {
@@ -143,20 +145,26 @@ function getDefaultItems() {
 	];
 }
 
-function rollItem(items, rolledItems, takeOne) {
+function getRandomItem(items) {
 	items = items.filter(item => item.count !== 0)
 	const elementIndex = Math.floor(Math.random() * items.length)
-
-	if (takeOne) {
-		items[elementIndex].count--
-		rolledItems.push(items[elementIndex].name)
-	} else {
-		while(items[elementIndex].count > 0) {
-			items[elementIndex].count--
-			rolledItems.push(items[elementIndex].name)
-		}
-	}
 	return items[elementIndex].name
+}
+
+function lowerItemCountInArray(itemName, itemArray, rolledItems, takeOne) {
+	itemArray.find(item => {
+		if (item.name === itemName) {
+			if (takeOne) {
+				item.count--
+				rolledItems.push(item.name)
+			} else {
+				while(item.count > 0) {
+					item.count--
+					rolledItems.push(item.name)
+				}
+			}
+		}
+	})
 }
 
 function getEmbdedOutputMessage(rolledItems) {
