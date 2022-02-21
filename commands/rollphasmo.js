@@ -45,13 +45,13 @@ module.exports = {
 					ButtonInteraction.deferUpdate();
 					break;
 				case 'takeOne':
-					lowerItemCountInArray(randomItem, defaultItems, rolledItems, true)
+					addItemToRolledItems(randomItem, defaultItems, rolledItems, true)
 					embededMessage.setFields({ name: 'Rolled Items', value: getEmbdedOutputMessage(rolledItems) });
 					embMessage.edit({ embeds: [embededMessage], components: [buttons] });
 					ButtonInteraction.deferUpdate();
 					break;
 				case 'takeAll':
-					lowerItemCountInArray(randomItem, defaultItems, rolledItems, false)
+					addItemToRolledItems(randomItem, defaultItems, rolledItems, false)
 					embededMessage.setFields({ name: 'Rolled Items', value: getEmbdedOutputMessage(rolledItems) });
 					embMessage.edit({ embeds: [embededMessage], components: [buttons] });
 					ButtonInteraction.deferUpdate();
@@ -151,7 +151,7 @@ function getRandomItem(items) {
 	return items[elementIndex].name
 }
 
-function lowerItemCountInArray(itemName, itemArray, rolledItems, takeOne) {
+function addItemToRolledItems(itemName, itemArray, rolledItems, takeOne) {
 	itemArray.find(item => {
 		if (item.name === itemName) {
 			if (takeOne) {
