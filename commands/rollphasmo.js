@@ -7,7 +7,8 @@ module.exports = {
 	async execute(interaction) {
 		const buttons = new MessageActionRow().addComponents(
 			new MessageButton().setCustomId('roll').setLabel('Roll').setStyle('PRIMARY'),
-			new MessageButton().setCustomId('reset').setLabel('Reset').setStyle('DANGER')
+			new MessageButton().setCustomId('reset').setLabel('Reset').setStyle('DANGER'),
+			new MessageButton().setCustomId('finished').setLabel('Finished').setStyle('SUCCESS')
 		);
 
 		const pullButton = new MessageActionRow().addComponents(
@@ -55,6 +56,10 @@ module.exports = {
 					embededMessage.setFields({ name: 'Rolled Items', value: getEmbdedOutputMessage(rolledItems) });
 					embMessage.edit({ embeds: [embededMessage], components: [buttons] });
 					ButtonInteraction.deferUpdate();
+					break;
+				case'finished':
+					embededMessage.setFields({name: 'Game Completed', value:'\u200B'})
+					embMessage.edit({ embeds: [embededMessage] }).then(e => e.delete())
 					break;
 				default:
 					rolledItems = [];
