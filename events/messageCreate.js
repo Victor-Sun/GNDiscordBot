@@ -21,7 +21,6 @@ module.exports = {
             })
 
             if (hasBlackListedWord && !message.author.bot) {
-                message.delete();
                 message.channel.send({content: replies.join(' '), tts: true });
             }
         }
