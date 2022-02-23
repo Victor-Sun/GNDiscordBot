@@ -27,7 +27,8 @@ module.exports = {
 			.setTimestamp();
 
 		const embMessage = await interaction.channel.send({ embeds: [embededMessage], components: [buttons] });
-		const replyMessage = await interaction.reply({ content: 'Roulette Started!', hidden: true, ephemeral: true });
+		await interaction.reply({ content: 'Roulette Started!', hidden: true });
+		interaction.deleteReply();
 		const collector = embMessage.createMessageComponentCollector();
 
 		let defaultItems = getDefaultItems(); 
