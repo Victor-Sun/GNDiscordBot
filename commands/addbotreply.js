@@ -19,11 +19,10 @@ module.exports = {
         const word = interaction.options.getString('word');
         const reply = interaction.options.getString('reply');
         const wordCheck = await WordReply.findOne({ word: word });
-
         if (wordCheck) {
             interaction.reply('Word already exists in the db');
         } else {
-            const addWord = await WordReply.insertMany({word: word, reply: reply});
+            await WordReply.insertMany({word: word, reply: reply, added_by_username: interaction.user.username, added_by_id: interaction.user.id});
             interaction.reply('Word and reply added to db');
         }
 	}
