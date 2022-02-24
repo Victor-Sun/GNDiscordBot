@@ -14,7 +14,7 @@ module.exports = {
             const replies = [];
     
             replyList.map(reply => {
-                if (message.content.includes(reply.word)) {
+                if (message.content.toLowerCase().includes(reply.word.toLowerCase())) {
                     hasBlackListedWord = true;
                     replies.push(reply.reply);
                 }
