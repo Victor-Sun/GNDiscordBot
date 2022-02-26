@@ -33,7 +33,7 @@ module.exports = {
 
 		let defaultItems = getDefaultItems(); 
 		let rolledItems = [];
-		let randomItem = ''
+		let randomItem = '';
 
 		collector.on('collect', async (ButtonInteraction) => {
 			const id = ButtonInteraction.customId;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const config = require('../config');
 
 class Database {
     constructor() {
@@ -7,10 +8,12 @@ class Database {
 
     connect() {
         console.log('Connecting to database...')
-
-        mongoose.connect(process.env.MONGO_URL, {
+        mongoose.connect(`mongodb://${config.MONGO_URL}`, {
+            user: config.MONGO_USER,
+            pass: config.MONGO_PASS,
+            dbName: config.MONGO_DB,
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
         }).then(() => {
             console.log('Connected to database.');
             this.connection = mongoose.connection;

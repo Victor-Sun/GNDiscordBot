@@ -8,9 +8,12 @@ module.exports = {
 	async execute(message) {
         let hasBlackListedWord = false
         const ttsSetting = await BotSettings.findOne({ name: 'ttsEnabled'});
+        if (!ttsSetting) {
+            await BotSettings.insertMany({name: 'ttsEnabled', value: true})
+        }
         const replyList = await WordList.find();
 
-        if (ttsSetting.value) {
+        if (ttsSetting && ttsSetting.value) {
             const replies = [];
     
             replyList.map(reply => {
