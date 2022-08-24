@@ -4,7 +4,7 @@ const ShouldBeDisconnected = require('../models/ShouldBeDisconnected')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('disconnectuser')
-		.setDescription('Disconnect the user from discord for 5 minutes')
+		.setDescription('Disconnect the user from discord for 1 minute')
         .addUserOption(option => option
             .setName('user')
             .setDescription('Name of the user to disconnect')
@@ -13,7 +13,7 @@ module.exports = {
 	async execute(interaction) {
         const userId = interaction.options.getUser('user').id
         const discordServerId = interaction.guildId
-        const until = new Date().valueOf() + 300000
+        const until = new Date().valueOf() + 60000
 
         const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: discordServerId })
 
