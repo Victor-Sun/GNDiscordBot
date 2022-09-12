@@ -4,7 +4,7 @@ module.exports = {
 	name: 'voiceStateUpdate',
 	on: true,
 	async execute(oldState, newState) {
-        if (!newState.channelId) return;
+        if (!newState.channelId) return
 
         const userId = newState.member.user.id
         const guildId = newState.guild.id
@@ -13,5 +13,7 @@ module.exports = {
         if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
             newState.member.voice.disconnect()
         }
+
+        console.log(newState)
     },
 };

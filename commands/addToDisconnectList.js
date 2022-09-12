@@ -17,6 +17,19 @@ module.exports = {
 
         const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: discordServerId })
 
+        // Check to see if the disconnect user command is enabled
+        const shouldBeDisconnectedSetting = await BotSettings.findOne({ name: 'shouldBeDisconnectedCommand'});
+        if (!shouldBeDisconnectedSetting) {
+            await BotSettings.insertMany({name: 'shouldBeDisconnectedSetting', value: true})
+        }
+
+        if (shouldBeDisconnectedSetting === false) {
+            interaction.deleteReply()
+            return
+        }
+        
+        //TODO: After the command is used, the channel from which the command was used in needs to be pulled. Then the interaction needs to be deleted and then a reply should be sent using the channel and not the interaction
+
         if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
             interaction.reply('User is already being disconnected. Quit being such a dick.')
         } else {
