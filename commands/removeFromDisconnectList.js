@@ -12,15 +12,19 @@ module.exports = {
         ),
 	async execute(interaction) {
         const userId = interaction.options.getUser('user').id
+        const textChannel = interaction.channel
         const discordServerId = interaction.guildId
 
         const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: discordServerId })
 
         if (shouldBeDisconnected) {
             await ShouldBeDisconnected.findOneAndDelete({ userId: userId, guildId: discordServerId })
-            interaction.reply('User was removed from the disconnect list.')
+            textChannel.send('User was removed from the disconnect list.')
+            // interaction.reply('User was removed from the disconnect list.')
         } else {
-            interaction.reply('User is not currently being disconnected.')
+            textChannel.send('User is not currently being disconnected.')
+            // interaction.reply('User is not currently being disconnected.')
         }
+        interaction.deleteReply()
 	}
 }
