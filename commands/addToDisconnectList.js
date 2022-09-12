@@ -1,52 +1,58 @@
 const {  SlashCommandBuilder } = require('@discordjs/builders')
 const { Interaction } = require('discord.js')
 const ShouldBeDisconnected = require('../models/ShouldBeDisconnected')
+const BotSettings = require('../models/BotSettings')
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('disconnectuser')
-		.setDescription('Disconnect the user from discord for 1 minute')
+    data: new SlashCommandBuilder()
+        .setName('disconnectuser')
+        .setDescription('Disconnect the user from discord for 1 minute')
         .addUserOption(option => option
             .setName('user')
             .setDescription('Name of the user to disconnect')
             .setRequired(true)
         ),
-	async execute(interaction) {
-        const userId = interaction.options.getUser('user').id
-        const discordServerId = interaction.guildId
-        const textChannel = interaction.channel
-        const until = new Date().valueOf() + 60000
-
-        // Check to see if the disconnect user command is enabled
-        const shouldBeDisconnectedSetting = await BotSettings.findOne({ name: 'shouldBeDisconnectedCommand'});
-        if (!shouldBeDisconnectedSetting) {
-            await BotSettings.insertMany({name: 'shouldBeDisconnectedSetting', value: true})
-        }
-
-        if (shouldBeDisconnectedSetting === false) {
+    async execute(interaction) {
+        try {
+            const victimId = interaction.options.getUser('user').id
+            const victimName = interaction.options.getUser('user').username
+            const discordServerId = interaction.guildId
+            const textChannel = interaction.channel
+            const until = new Date().valueOf() + 60000
+    
+            await interaction.reply('Command received')
             interaction.deleteReply()
-            return
-        }
-
-        // Checks if the user is already in the disconnect list
-        const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: discordServerId })
-
-        //TODO: After the command is used, the channel from which the command was used in needs to be pulled. Then the interaction needs to be deleted and then a reply should be sent using the channel and not the interaction
-
-        if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
-            textChannel.send('User is already being disconnected. Quit being such a dick.')
-        } else {
-            if (shouldBeDisconnected) {
-                await ShouldBeDisconnected.deleteOne({userId: userId, guildId: discordServerId })
+    
+            // Check to see if the disconnect user command is enabled
+            const shouldBeDisconnectedSetting = await BotSettings.findOne({ name: 'shouldBeDisconnectedCommand'});
+            if (!shouldBeDisconnectedSetting) {
+                await BotSettings.insertMany({name: 'shouldBeDisconnectedCommand', value: true})
             }
-            await ShouldBeDisconnected.insertMany({ userId: userId, guildId: discordServerId, until: until })
-            textChannel.send(interaction.options.getUser('user').username + ' will be disconnected until ' + new Date(until))
-            if (interaction.guild.members.cache.get(userId).voice.channel) {
-                interaction.guild.members.cache.get(userId).voice.disconnect()
-            }
-        }
 
-        interaction.deleteReply()
-        return
+            if (shouldBeDisconnectedSetting.value === false) {
+                return textChannel.send('Command disabled')
+            } else {
+                // Checks if the user is already in the disconnect list
+                const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: victimId, guildId: discordServerId })
+        
+                if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
+                    textChannel.send(`${victimName} is already being disconnected. Quit being such a dick.`)
+                } else {
+                    if (shouldBeDisconnected) {
+                        await ShouldBeDisconnected.deleteOne({userId: victimId, guildId: discordServerId })
+                    }
+
+                    await ShouldBeDisconnected.insertMany({ userId: victimId, guildId: discordServerId, until: until })
+                    textChannel.send(`${victimName} will be disconnected until ${new Date(until)}`)
+                    
+                    if (interaction.guild.members.cache.get(victimId).voice.channel) {
+                        interaction.guild.members.cache.get(victimId).voice.disconnect()
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error)
+            interaction.channel.send('An error occursed while running the command')
+        }
     }
 }
