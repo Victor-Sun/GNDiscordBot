@@ -37,6 +37,11 @@ module.exports = {
 
 		collector.on('collect', async (ButtonInteraction) => {
 			const id = ButtonInteraction.customId;
+			const clicker = ButtonInteraction.user
+
+			if (clicker) {
+				console.log(`${ButtonInteraction.customId} Clicked by:  ${clicker.username}`)
+			}
 
 			switch (id) {
 				case 'roll':

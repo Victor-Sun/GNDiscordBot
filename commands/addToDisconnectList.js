@@ -52,6 +52,7 @@ module.exports = {
             }
         } catch (error) {
             console.error(error)
+            interaction.deleteReply()
             interaction.channel.send('An error occursed while running the command')
         }
     }
