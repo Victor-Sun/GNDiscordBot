@@ -40,7 +40,6 @@ module.exports = {
 			const clicker = ButtonInteraction.user
 
 			if (clicker) {
-				console.log(clicker)
 				console.log(`${ButtonInteraction.customId} Clicked by:  ${clicker.id} - ${clicker.username}`)
 			}
 
