@@ -15,7 +15,5 @@ module.exports = {
         if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
             newState.member.voice.disconnect()
         }
-
-        console.log(newState)
     },
 };

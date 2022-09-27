@@ -19,7 +19,6 @@ module.exports = {
         const word = interaction.options.getString('word');
         const reply = interaction.options.getString('reply');
         const wordCheck = await WordReply.findOne({ word: word }).collation({locale: 'en', strength: 1});
-        console.log(wordCheck)
         if (!wordCheck) {
             interaction.reply('Word does not exist on the db');
         } else {
