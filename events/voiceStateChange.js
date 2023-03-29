@@ -1,19 +1,56 @@
+const BotSettings = require('../models/BotSettings');
+const DiscordDefaultChannel = require('../models/DiscordDefaultChannel');
+const IgnoreDisconnect = require('../models/IgnoreDisconnect');
 const ShouldBeDisconnected = require('../models/ShouldBeDisconnected')
 
 module.exports = {
 	name: 'voiceStateUpdate',
 	on: true,
 	async execute(oldState, newState) {
-        if (!newState.channelId) return
+        if (!newState.channelId) {
+            const fetchedLogs = await oldState.guild.fetchAuditLogs({
+                limit: 1,
+                type: 'MEMBER_DISCONNECT',
+              });
 
-        const userId = newState.member.user.id
-        const guildId = newState.guild.id
+            // Person who disconnected someone
+            const { executor } = fetchedLogs.entries.first();
 
-        // TODO: Add setting here to check if the setting is disabled 
+            const ignoreDisconnect = await IgnoreDisconnect.findOne({ userId: executor.id })
 
-        const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: guildId })
-        if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
-            newState.member.voice.disconnect()
+            if (!ignoreDisconnect) {
+                const discordId = newState.guild.id
+                const until = new Date().valueOf() + 60000
+                const autoDisconnectForDisconnect = await BotSettings.findOne({ name: 'autoDisconnectForDisconnect' })
+                if (autoDisconnectForDisconnect) {
+                    const alreadyBeingDisconnected = await ShouldBeDisconnected.findOne({ userId: executor.id, guildId: discordId})
+                    const defaultChannel = await DiscordDefaultChannel.findOne({discordId: discordId})
+
+                    if (defaultChannel) {
+                        if (alreadyBeingDisconnected && alreadyBeingDisconnected.until > new Date()) {
+                            newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be 
+                            disconnected until ${new Date(until)}`)
+                            await ShouldBeDisconnected.updateOne({ userId: executor.id, guildId: discordId }, { until: until } )
+                        } else {
+                            newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be disconnected until ${new Date(until)}`)
+                            await ShouldBeDisconnected.insertMany({ userId: executor.id, guildId: discordId, until: until })
+                        }
+                    }
+
+                    if (newState.guild.members.cache.get(executor.id).voice.channel) {
+                        newState.guild.members.cache.get(executor.id).voice.disconnect()
+                    }
+                }
+            }
+        } else {
+            const userId = newState.member.user.id
+            const guildId = newState.guild.id
+
+            // TODO: Add setting here to check if the setting is disabled 
+            const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: userId, guildId: guildId })
+            if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
+                newState.member.voice.disconnect()
+            }
         }
     },
 };

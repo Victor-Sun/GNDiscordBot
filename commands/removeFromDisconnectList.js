@@ -22,9 +22,9 @@ module.exports = {
 
         if (shouldBeDisconnected) {
             await ShouldBeDisconnected.findOneAndDelete({ userId: userId, guildId: discordServerId })
-            textChannel.send('User was removed from the disconnect list.')
+            textChannel.send(`<@${userId}> was removed from the disconnect list.`)
         } else {
-            textChannel.send('User is not currently being disconnected.')
+            textChannel.send(`<@${userId}> is not currently being disconnected.`)
         }
 	}
 }

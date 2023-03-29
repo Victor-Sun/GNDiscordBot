@@ -34,17 +34,17 @@ module.exports = {
             } else {
                 // Checks if the user is already in the disconnect list
                 const shouldBeDisconnected = await ShouldBeDisconnected.findOne({ userId: victimId, guildId: discordServerId })
-        
+
                 if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
-                    textChannel.send(`${victimName} is already being disconnected. Quit being such a dick.`)
+                    textChannel.send(`<@${victimId}> is already being disconnected. Quit being such a dick.`)
                 } else {
                     if (shouldBeDisconnected) {
                         await ShouldBeDisconnected.deleteOne({userId: victimId, guildId: discordServerId })
                     }
 
                     await ShouldBeDisconnected.insertMany({ userId: victimId, guildId: discordServerId, until: until })
-                    textChannel.send(`${victimName} will be disconnected until ${new Date(until)}`)
-                    
+                    textChannel.send(`<@${victimId}> will be disconnected until ${new Date(until)}`)
+
                     if (interaction.guild.members.cache.get(victimId).voice.channel) {
                         interaction.guild.members.cache.get(victimId).voice.disconnect()
                     }
