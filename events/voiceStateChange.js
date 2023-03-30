@@ -7,22 +7,21 @@ module.exports = {
 	name: 'voiceStateUpdate',
 	on: true,
 	async execute(oldState, newState) {
-        if (!newState.channelId) {
-            const fetchedLogs = await oldState.guild.fetchAuditLogs({
-                limit: 1,
-                type: 'MEMBER_DISCONNECT',
-              });
+        const autoDisconnectForDisconnect = await BotSettings.findOne({ name: 'autoDisconnectForDisconnect' })
+        if (autoDisconnectForDisconnect.value) {
+            if (!newState.channelId) {
+                const fetchedLogs = await oldState.guild.fetchAuditLogs({
+                    limit: 1,
+                    type: 'MEMBER_DISCONNECT',
+                });
 
-            // Person who disconnected someone
-            const { executor } = fetchedLogs.entries.first();
+                const { executor, createdAt } = fetchedLogs.entries.sort((a, b) => b.createdAt - a.createdAt).first();
+                const ignoreDisconnect = await IgnoreDisconnect.findOne({ userId: executor.id })
 
-            const ignoreDisconnect = await IgnoreDisconnect.findOne({ userId: executor.id })
-
-            if (!ignoreDisconnect) {
-                const discordId = newState.guild.id
-                const until = new Date().valueOf() + 60000
-                const autoDisconnectForDisconnect = await BotSettings.findOne({ name: 'autoDisconnectForDisconnect' })
-                if (autoDisconnectForDisconnect) {
+                if (!ignoreDisconnect) {
+                    const discordId = newState.guild.id
+                    const until = new Date().valueOf() + 60000
+                    
                     const alreadyBeingDisconnected = await ShouldBeDisconnected.findOne({ userId: executor.id, guildId: discordId})
                     const defaultChannel = await DiscordDefaultChannel.findOne({discordId: discordId})
 
