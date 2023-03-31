@@ -17,7 +17,7 @@ module.exports = {
         ),
 	async execute(interaction) {
         const moveSpam = await BotSettings.findOne({ name: 'moveSpam'})
-        const textChannel = interaction.channel
+
         if (!moveSpam) {
             await BotSettings.insertMany({name: 'moveSpam', value: true})
         }
@@ -29,8 +29,8 @@ module.exports = {
             const victimId = interaction.options.getUser('user').id
             let moveAmount = interaction.options.getInteger('amount')
             
-            if (moveAmount > 10) {
-                moveAmount = 10
+            if (moveAmount > 30) {
+                moveAmount = 30
             }
     
             const channelIds = []
