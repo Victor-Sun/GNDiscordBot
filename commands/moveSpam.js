@@ -45,21 +45,26 @@ module.exports = {
             if (interaction.guild.members.cache.get(victimId).voice.channel) {
                 let moveCount = 0
                 while(moveCount < moveAmount) {
-                    if (interaction.guild.members.cache.get(victimId).voice.channel) {
-                        const randomChannel = Math.floor(Math.random() * channelIds.length)
-                        if (randomChannel !== interaction.guild.members.cache.get(victimId).voice.channelId) {
-                            await interaction.guild.members.cache.get(victimId).voice.setChannel(channelIds[randomChannel])
-                            moveCount++
+                    if (interaction) {
+                        if (interaction.guild.members.cache.get(victimId).voice.channel) {
+                            const randomChannel = Math.floor(Math.random() * channelIds.length)
+                            if (randomChannel !== interaction.guild.members.cache.get(victimId).voice.channelId) {
+                                await interaction.guild.members.cache.get(victimId).voice.setChannel(channelIds[randomChannel])
+                                moveCount++
+                            }
+                        } else {
+                            moveSuccess = false
+                            break
                         }
                     } else {
-                        interaction.reply(`<@${victimId}> is not connected to a voice channel.`)
                         moveSuccess = false
                         break
                     }
                 }
-    
                 if (moveSuccess) {
                     interaction.reply(`<@${victimId}> has been given aids.`)
+                } else {
+                    interaction.reply(`<@${victimId}> is not connected to a voice channel.`)
                 }
             } else {
                 interaction.reply(`<@${victimId}> is not connected to a voice channel.`)
