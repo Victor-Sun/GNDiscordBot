@@ -17,20 +17,21 @@ module.exports = {
         ),
 	async execute(interaction) {
         const moveSpam = await BotSettings.findOne({ name: 'moveSpam'})
+        const textChannel = interaction.channel
 
         if (!moveSpam) {
             await BotSettings.insertMany({name: 'moveSpam', value: true})
         }
 
         if (moveSpam.value === false) {
-            interaction.reply('Command disabled')
+            textChannel.send('Command disabled')
         } else {
             const channels = await interaction.member.guild.channels.fetch()
             const victimId = interaction.options.getUser('user').id
             let moveAmount = interaction.options.getInteger('amount')
             
-            if (moveAmount > 30) {
-                moveAmount = 30
+            if (moveAmount > 15) {
+                moveAmount = 15
             }
     
             const channelIds = []
@@ -62,12 +63,12 @@ module.exports = {
                     }
                 }
                 if (moveSuccess) {
-                    interaction.reply(`<@${victimId}> has been given aids.`)
+                    textChannel.send(`<@${victimId}> has been given aids.`)
                 } else {
-                    interaction.reply(`<@${victimId}> is not connected to a voice channel.`)
+                    textChannel.send(`<@${victimId}> is not connected to a voice channel.`)
                 }
             } else {
-                interaction.reply(`<@${victimId}> is not connected to a voice channel.`)
+                textChannel.send(`<@${victimId}> is not connected to a voice channel.`)
             }
         }
 	}
