@@ -30,11 +30,11 @@ module.exports = {
     
                         if (defaultChannel) {
                             if (alreadyBeingDisconnected && alreadyBeingDisconnected.until > new Date()) {
-                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be 
+                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decided to disconnect someone they will be 
                                 disconnected until ${new Date(until)}`)
                                 await ShouldBeDisconnected.updateOne({ userId: executor.id, guildId: discordId }, { until: until } )
                             } else {
-                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be disconnected until ${new Date(until)}`)
+                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decided to disconnect someone they will be disconnected until ${new Date(until)}`)
                                 await ShouldBeDisconnected.insertMany({ userId: executor.id, guildId: discordId, until: until })
                             }
                         }
