@@ -18,26 +18,30 @@ module.exports = {
                 const { executor, createdAt } = fetchedLogs.entries.sort((a, b) => b.createdAt - a.createdAt).first();
                 const ignoreDisconnect = await IgnoreDisconnect.findOne({ userId: executor.id })
 
-                if (!ignoreDisconnect) {
-                    const discordId = newState.guild.id
-                    const until = new Date().valueOf() + 60000
-                    
-                    const alreadyBeingDisconnected = await ShouldBeDisconnected.findOne({ userId: executor.id, guildId: discordId})
-                    const defaultChannel = await DiscordDefaultChannel.findOne({discordId: discordId})
-
-                    if (defaultChannel) {
-                        if (alreadyBeingDisconnected && alreadyBeingDisconnected.until > new Date()) {
-                            newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be 
-                            disconnected until ${new Date(until)}`)
-                            await ShouldBeDisconnected.updateOne({ userId: executor.id, guildId: discordId }, { until: until } )
-                        } else {
-                            newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be disconnected until ${new Date(until)}`)
-                            await ShouldBeDisconnected.insertMany({ userId: executor.id, guildId: discordId, until: until })
+                // TODO: This isn't the best way but it seems to be the only way.
+                // Check if it happened in the past.(Now - past = positive)
+                if ((new Date().valueOf() - createdAt > 0) && (new Date().valueOf() - createdAt < 6000))  {
+                    if (!ignoreDisconnect) {
+                        const discordId = newState.guild.id
+                        const until = new Date().valueOf() + 60000
+                        
+                        const alreadyBeingDisconnected = await ShouldBeDisconnected.findOne({ userId: executor.id, guildId: discordId})
+                        const defaultChannel = await DiscordDefaultChannel.findOne({discordId: discordId})
+    
+                        if (defaultChannel) {
+                            if (alreadyBeingDisconnected && alreadyBeingDisconnected.until > new Date()) {
+                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be 
+                                disconnected until ${new Date(until)}`)
+                                await ShouldBeDisconnected.updateOne({ userId: executor.id, guildId: discordId }, { until: until } )
+                            } else {
+                                newState.guild.channels.cache.filter(e => e.type === 'GUILD_TEXT').find(f => f.id === defaultChannel.channelId).send(`Since <@${executor.id}> decide to disconnect someone they will be disconnected until ${new Date(until)}`)
+                                await ShouldBeDisconnected.insertMany({ userId: executor.id, guildId: discordId, until: until })
+                            }
                         }
-                    }
-
-                    if (newState.guild.members.cache.get(executor.id).voice.channel) {
-                        newState.guild.members.cache.get(executor.id).voice.disconnect()
+    
+                        if (newState.guild.members.cache.get(executor.id).voice.channel) {
+                            newState.guild.members.cache.get(executor.id).voice.disconnect()
+                        }
                     }
                 }
             }
