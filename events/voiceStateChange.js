@@ -39,7 +39,7 @@ module.exports = {
                             }
                         }
     
-                        if (newState.guild.members.cache.get(executor.id).voice.channel) {
+                        if (newState.guild.members.cache.get(executor.id) && newState.guild.members.cache.get(executor.id).voice && newState.guild.members.cache.get(executor.id).voice.channel) {
                             newState.guild.members.cache.get(executor.id).voice.disconnect()
                         }
                     }
