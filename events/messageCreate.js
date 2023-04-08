@@ -1,4 +1,3 @@
-const blacklist = require('../blacklist.js')
 const BotSettings = require('../models/BotSettings')
 const WordList = require('../models/WordReply')
 
