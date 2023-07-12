@@ -18,7 +18,11 @@ module.exports = {
                     }
                 })
                 
-                interaction.reply(formattedBlacklist)
+                if(!formattedBlacklist) {
+                    interaction.reply('Nobody in the blacklist')
+                } else {
+                    interaction.reply(formattedBlacklist)
+                }
             } catch (error) {
                 interaction.reply('Invalid URL')
             }
