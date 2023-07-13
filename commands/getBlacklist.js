@@ -7,8 +7,8 @@ module.exports = {
 		.setDescription('Get the formatted M+ blacklist'),
         async execute(interaction) {
             try {
-                await interaction.deferReply()
-                const blacklistArray = await WowBlacklist.find({});
+                await interaction.reply('Generating blacklist')
+                const blacklistArray = await WowBlacklist.find({})
                 let formattedBlacklist = ''
 
                 blacklistArray.forEach((e, i) => {
@@ -20,9 +20,9 @@ module.exports = {
                 })
                 
                 if(!formattedBlacklist) {
-                    await interaction.editReply('Nobody in the blacklist')
+                    await interaction.followUp('Nobody in the blacklist')
                 } else {
-                    await interaction.editReply(formattedBlacklist)
+                    await interaction.followUp(formattedBlacklist)
                 }
             } catch (error) {
                 interaction.reply('Invalid URL')
