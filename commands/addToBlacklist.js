@@ -16,7 +16,7 @@ module.exports = {
             const raiderIoSplit = raiderIo.split('?')[0]
 
             const splitRaiderIo = raiderIoSplit.split('/')
-            const ign = splitRaiderIo[splitRaiderIo.length - 1]
+            const ign = decodeURI(splitRaiderIo[splitRaiderIo.length - 1])
             const realm = splitRaiderIo[splitRaiderIo.length - 2]
 
             let realmName = ''
