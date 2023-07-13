@@ -20,9 +20,9 @@ module.exports = {
                 })
                 
                 if(!formattedBlacklist) {
-                    await interaction.followUp('Nobody in the blacklist')
+                    await interaction.editReply('Nobody in the blacklist')
                 } else {
-                    await interaction.followUp(formattedBlacklist)
+                    await interaction.editReply(formattedBlacklist)
                 }
             } catch (error) {
                 interaction.reply('Invalid URL')
