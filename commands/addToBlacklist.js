@@ -26,10 +26,10 @@ module.exports = {
 
             const alreadyInDb = await WowBlacklist.findOne({ ign: ign, realmName: realmName });
             if (alreadyInDb) {
-                interaction.reply('Player already in the blacklist');
+                await interaction.reply('Player already in the blacklist');
             } else {
                 await WowBlacklist.insertMany({ign: ign, realm: realmName, added_by_username: interaction.user.username, added_by_id: interaction.user.id});
-                interaction.reply('Player added to blacklist');
+                await interaction.reply('Player added to blacklist');
             }
         } catch (error) {
             interaction.reply('Invalid URL')
