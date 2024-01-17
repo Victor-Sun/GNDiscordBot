@@ -45,7 +45,7 @@ module.exports = {
 
 			switch (id) {
 				case 'roll':
-					randomItem = getRandomItem(defaultItems, id === 'takeOne' ? true : false)
+					randomItem = getRandomItem(defaultItems)
 					embededMessage.setFields({ name: 'Rolled Items', value: rolledItems.length > 0 ? getEmbdedOutputMessage(rolledItems) : '\u200B' });
 					embededMessage.addField('You rolled: ', randomItem)
 					embMessage.edit({ embeds: [embededMessage], components: [pullButton] });
