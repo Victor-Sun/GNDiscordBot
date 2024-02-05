@@ -5,7 +5,8 @@ const WowBlacklistSchema = new mongoose.Schema({
     ign: String,
     realm: String,
     added_by_username: String,
-    added_by_id: String
+    added_by_id: String,
+    reason: String
 }, {
     versionKey: false
 });
