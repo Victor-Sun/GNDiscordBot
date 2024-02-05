@@ -17,7 +17,7 @@ module.exports = {
         const resp = await fetch(url, requestOptions)
         const res = await resp.json()
 
-        interaction.reply(`Wow token price is: ${shortenGold(res.price / 10000)}G`)
+        interaction.reply(`Wow token price is: ${shortenGold(res.price / 10000)} Gold`)
     }
 
 };
