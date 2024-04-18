@@ -16,14 +16,17 @@ module.exports = {
         ),
     async execute(interaction) {
         try {
-            let token = await Tokens.findOne({service: 'putio'}).token
-            console.log(token)
-            let tokenExists = false
+            let token = await Tokens.findOne({service: 'putio'})
+            const expiredToken = new Date(token.until).valueOf() < new Date().valueOf + 1000*60*60*12
+            token = token.token
+
+            let tokenExists
             if (token) {
-                tokenExists = (await putioAPI.Auth.ValidateToken(token)).status === 200
+                const tokenDb = (await putioAPI.Auth.ValidateToken(token)).body
+                tokenExists = tokenDb.result
             }
 
-            if (!tokenExists) {
+            if (!tokenExists || expiredToken) {
                 await putioAPI.Auth.Login({
                     username: config.PUTIO_USERNAME,
                     password: config.PUTIO_PASSWORD,
@@ -32,7 +35,7 @@ module.exports = {
                         client_secret: config.PUTIO_CLIENT_SECRET}
                 }).then(async auth => {
                     token = auth.body.access_token
-                    await Tokens.insertMany({ service: 'putio', token: token })
+                    await Tokens.insertMany({ service: 'putio', token: token, until: new Date().valueOf })
                 })
             }
 
