@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, Application } = require('discord.js');
 const config = require('./config.js');
 const client = new Client({ 
     intents: [

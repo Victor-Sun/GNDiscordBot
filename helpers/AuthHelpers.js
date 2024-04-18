@@ -1,7 +1,7 @@
 const config = require('../config.js');
 const fetch = require("node-fetch");
 
-module.exports = { 
+module.exports = {
     async getBlizzardApiKey() {
         const requestOptions = {
             method: 'POST',
