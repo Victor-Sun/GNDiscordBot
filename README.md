@@ -1,1 +1,3 @@
 # GNDiscordBot
+
+TODO Write info
