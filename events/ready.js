@@ -15,7 +15,7 @@ module.exports = {
 
         (async () => {
             try {
-                if (config.ENV === 'production') {
+                if (config.NODE_ENV === 'production') {
                     await rest.put(Routes.applicationCommands(clientId), {
                         body: commands
                     });
