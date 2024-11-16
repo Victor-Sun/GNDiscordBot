@@ -4,7 +4,7 @@ const BotSettings = require('../models/BotSettings')
 module.exports = {
 	data: new SlashCommandBuilder()
         .setName('spammoveall')
-        .setDescription('Spam move user')
+        .setDescription('Spam move all users')
         .addIntegerOption(amount => amount
             .setName('amount')
             .setDescription('Amount of times to spam move')
