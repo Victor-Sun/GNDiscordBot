@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const config = {
-    ENV: process.env.ENV,
+    NODE_ENV: process.env.NODE_ENV,
     TOKEN: process.env.TOKEN,
     CLIENTID: process.env.CLIENTID,
     GUILDID: process.env.GUILDID,
