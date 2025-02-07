@@ -36,8 +36,8 @@ module.exports = {
             connectedUserIds.forEach(async victimId => {
                 let moveAmount = interaction.options.getInteger('amount')
             
-                if (moveAmount > 15) {
-                    moveAmount = 15
+                if (moveAmount > 5) {
+                    moveAmount = 5
                 }
         
                 const channelIds = []
