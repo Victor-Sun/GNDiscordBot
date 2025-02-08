@@ -1,5 +1,7 @@
 const {  SlashCommandBuilder } = require('@discordjs/builders')
 const IgnoreDisconnect = require('../models/IgnoreDisconnect')
+const { messages, permissionNames } = require('../strings')
+const BotPermissions = require('../models/BotPermissions')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,13 +14,20 @@ module.exports = {
         ),
 	async execute(interaction) {
     const user = interaction.options.getUser('user')
-    const doesUserExistInTable = await IgnoreDisconnect.findOne({userId: user.id})
+    const commandRunner = interaction.user.id
+    const hasPerms = await BotPermissions.findOne({name: permissionNames.addIgnoreDisc, userId: commandRunner})
 
-    if (!doesUserExistInTable) {
-      await IgnoreDisconnect.insertMany({ userId: user.id })
-      interaction.reply('User Added')
+    if (!hasPerms || !hasPerms.value) {
+      interaction.reply(messages.permissionDenied)
     } else {
-      interaction.reply('User already added')
+      const doesUserExistInTable = await IgnoreDisconnect.findOne({userId: user.id})
+  
+      if (!doesUserExistInTable) {
+        await IgnoreDisconnect.insertMany({ userId: user.id })
+        interaction.reply(messages.userAddedToAID)
+      } else {
+        interaction.reply(messages.userExistsInAID)
+      }
     }
 	}
 }

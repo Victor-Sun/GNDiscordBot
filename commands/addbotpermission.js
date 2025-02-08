@@ -1,5 +1,7 @@
-const {  SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 const BotPermissions = require('../models/BotPermissions')
+const { messages, permissionNames } = require('../strings')
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,14 +27,21 @@ module.exports = {
         const name = interaction.options.getString('permissionname')
         const user = interaction.options.getUser('user')
         const bool = !!interaction.options.getInteger('permissionbool')
-        const doesUserPermissionExist = await BotPermissions.findOne({ name: name, userId: user.id })
+        const commandRunner = interaction.user.id
 
-        if (!doesUserPermissionExist) {
-            await BotPermissions.insertMany({ name: name, userId: user.id, value: bool })
-            interaction.reply('Permission Added')
+        const hasPerms = await BotPermissions.findOne({name: permissionNames.editBotPerms, userId: commandRunner})
+        if (!hasPerms || !hasPerms.value) {
+            interaction.reply(messages.permissionDenied)
         } else {
-            await BotPermissions.updateOne({ name: name, userId: user.id }, { name: name, userId: user.id, value: bool })
-            interaction.reply('Permission Updated')
+            const doesUserPermissionExist = await BotPermissions.findOne({ name: name, userId: user.id })
+
+            if (!doesUserPermissionExist) {
+                await BotPermissions.insertMany({ name: name, userId: user.id, value: bool })
+                interaction.reply(messages.permissionAdded)
+            } else {
+                await BotPermissions.updateOne({ name: name, userId: user.id }, { name: name, userId: user.id, value: bool })
+                interaction.reply(messages.permissionUpdated)
+            }
         }
 	}
 }

@@ -20,7 +20,8 @@ module.exports = {
 
                 // TODO: This isn't the best way but it seems to be the only way.
                 // Check if it happened in the past.(Now - past = positive)
-                if ((new Date().valueOf() - createdAt > 0) && (new Date().valueOf() - createdAt < 6000))  {
+                const runDate = newDate().valueOf()
+                if ((runDate - createdAt > 0) && (runDate - createdAt < 6000))  {
                     if (!ignoreDisconnect) {
                         const discordId = newState.guild.id
                         const until = new Date().valueOf() + 60000
@@ -56,6 +57,5 @@ module.exports = {
         if (shouldBeDisconnected && shouldBeDisconnected.until > new Date()) {
             newState.member.voice.disconnect()
         }
-        
     },
 };

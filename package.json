@@ -4,7 +4,7 @@
   "description": "Discord bot created just for fun!",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ."
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,9 @@
     "pm2": "^5.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.0",
+    "globals": "^15.14.0",
     "nodemon": "^2.0.15"
   }
 }
