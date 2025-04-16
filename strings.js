@@ -17,7 +17,8 @@ module.exports = {
     },
     permissionNames: {
         addIgnoreDisc: "addIgnoreDisconnect",
-        editBotPerms: "editPerms"
+        editBotPerms: "editPerms",
+        moveSpamAll: "moveSpamAll"
     }
     // commandDescriptions: {}
 }

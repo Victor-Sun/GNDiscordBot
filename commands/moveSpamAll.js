@@ -1,6 +1,6 @@
 const {  SlashCommandBuilder } = require('@discordjs/builders')
-const BotSettings = require('../models/BotSettings')
-const BotPermissions = require('../models/BotPermissions')
+// const BotSettings = require('../models/BotSettings')
+// const BotPermissions = require('../models/BotPermissions')
 const { permissionNames, messages, commandName } = require('../strings')
 
 module.exports = {
@@ -13,21 +13,21 @@ module.exports = {
             .setRequired(true)
         ),
 	async execute(interaction) {
-        const moveSpamEnabled = await BotSettings.findOne({ name: commandName.moveSpamAll })
+        // const moveSpamEnabled = await BotSettings.findOne({ name: commandName.moveSpamAll })
         const textChannel = interaction.channel
-        const commandRunner = interaction.user.id
-        const hasPerms = await BotPermissions.findOne({name: permissionNames.addIgnoreDisc, userId: commandRunner })
+        // const commandRunner = interaction.user.id
+        // const hasPerms = await BotPermissions.findOne({name: permissionNames.moveSpamAll, userId: commandRunner })
 
-        if (!hasPerms || !hasPerms.value) {
-            interaction.reply(messages.permissionDenied)
-        } else {
-            if (!moveSpamEnabled) {
-                await BotSettings.insertMany({name: commandName.moveSpamAll, value: true })
-            }
+        // if (!hasPerms || !hasPerms.value) {
+        //     interaction.reply(messages.permissionDenied)
+        // } else {
+        //     if (!moveSpamEnabled) {
+        //         await BotSettings.insertMany({name: commandName.moveSpamAll, value: true })
+        //     }
     
-            if (moveSpamEnabled.value === false) {
-                textChannel.send(messages.commandDisabled)
-            } else {
+            // if (moveSpamEnabled.value === false) {
+            //     textChannel.send(messages.commandDisabled)
+            // } else {
                 const channels = await interaction.member.guild.channels.fetch()
                 const connectedUserIds = []
                 for(const ch of channels) {
@@ -80,5 +80,5 @@ module.exports = {
                 textChannel.send(messages.everyoneGivenAids)
             }
         }
-	}
-}
+// 	}
+// }
