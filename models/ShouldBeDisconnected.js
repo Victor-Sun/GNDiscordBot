@@ -1,12 +1,3 @@
-const mongoose = require('mongoose');
+const { createModel } = require('./BaseModel');
 
-const ShouldBeDisconnectedSchema = new mongoose.Schema({
-    _id: Number,
-    userId: Number,
-    guildId: Number,
-    until: Date
-}, {
-    versionKey: false
-});
-
-module.exports = mongoose.model('ShouldBeDisconnected', ShouldBeDisconnectedSchema);
+module.exports = createModel('ShouldBeDisconnected');

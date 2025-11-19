@@ -1,12 +1,3 @@
-const mongoose = require('mongoose');
+const { createModel } = require('./BaseModel');
 
-const TokensSchema = new mongoose.Schema({
-    _id: Number,
-    token: String,
-    service: String,
-    until: Date
-}, {
-    versionKey: false
-});
-
-module.exports = mongoose.model('Tokens', TokensSchema);
+module.exports = createModel('Tokens');

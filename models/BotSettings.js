@@ -1,11 +1,3 @@
-const mongoose = require('mongoose');
+const { createModel } = require('./BaseModel');
 
-const BotSettingsSchema = new mongoose.Schema({
-    _id: Number,
-    name: String,
-    value: Boolean
-}, {
-    versionKey: false
-});
-
-module.exports = mongoose.model('BotSettings', BotSettingsSchema);
+module.exports = createModel('BotSettings');

@@ -18,11 +18,11 @@ module.exports = {
 	async execute(interaction) {
         const word = interaction.options.getString('word');
         const reply = interaction.options.getString('reply');
-        const wordCheck = await WordReply.findOne({ word: word }).collation({locale: 'en', strength: 1});
+        const wordCheck = await WordReply.findOne({ word: word });
         if (!wordCheck) {
             interaction.reply('Word does not exist on the db');
         } else {
-            const updateWord = await WordReply.updateOne({ word: word }, { reply: reply }).collation({locale: 'en', strength: 1});;
+            await WordReply.updateOne({ word: word }, { reply: reply });
             interaction.reply('Reply editted on the db');
         }
 	}

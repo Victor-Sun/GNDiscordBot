@@ -9,9 +9,7 @@ const client = new Client({
     ] 
 });
 
-const Database = require('./config/Database');
-const db = new Database();
-db.connect();
+require('./config/Database');
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const commands = [];

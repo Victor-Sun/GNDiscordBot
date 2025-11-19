@@ -24,7 +24,7 @@ module.exports = {
                 realmName += e.charAt(0).toUpperCase() + e.slice(1)
             })
 
-            const alreadyInDb = await WowBlacklist.findOne({ ign: ign, realmName: realmName });
+            const alreadyInDb = await WowBlacklist.findOne({ ign: ign, realm: realmName });
             if (alreadyInDb) {
                 await interaction.reply('Player already in the blacklist');
             } else {

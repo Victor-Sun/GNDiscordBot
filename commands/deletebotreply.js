@@ -12,12 +12,12 @@ module.exports = {
         ),
 	async execute(interaction) {
         const word = interaction.options.getString('word');
-        const wordCheck = await WordReply.findOne({ word: word }).collation({locale: 'en', strength: 1});;
+        const wordCheck = await WordReply.findOne({ word: word });
 
         if (!wordCheck) {
             interaction.reply('Word does not exist on the db.');
         } else {
-            const deletedWord = await WordReply.deleteOne({ word: word }).collation({locale: 'en', strength: 1});;
+            await WordReply.deleteOne({ word: word });
             interaction.reply('Word and reply added to db');
         }
 	}
