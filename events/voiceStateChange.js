@@ -8,7 +8,7 @@ module.exports = {
 	on: true,
 	async execute(oldState, newState) {
         const autoDisconnectForDisconnect = await BotSettings.findOne({ name: 'autoDisconnectForDisconnect' })
-        if (autoDisconnectForDisconnect.value) {
+        if (autoDisconnectForDisconnect && autoDisconnectForDisconnect.value) {
             if (!newState.channelId) {
                 const fetchedLogs = await oldState.guild.fetchAuditLogs({
                     limit: 1,
