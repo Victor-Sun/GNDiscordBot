@@ -14,6 +14,11 @@ module.exports = {
 	async execute(interaction) {
         const textChannel = interaction.channel;
 
+        // Acknowledge the interaction then delete the reply so the visible message
+        // is a normal channel message without the "Used /command" bar.
+        await interaction.reply({ content: ' ', ephemeral: true });
+        await interaction.deleteReply();
+
         // BotSettings gate
         let disconnectChannelSetting = await BotSettings.findOne({ name: commandName.disconnectChannel });
         if (!disconnectChannelSetting) {
@@ -28,13 +33,13 @@ module.exports = {
         const targetChannel = interaction.options.getChannel('channel');
 
         if (!targetChannel || targetChannel.type !== 'GUILD_VOICE') {
-            return interaction.reply({ content: 'Please select a voice channel.', ephemeral: true });
+            return textChannel.send('Please select a voice channel.');
         }
 
         const members = Array.from(targetChannel.members.values());
 
         if (members.length === 0) {
-            return interaction.reply({ content: `No users connected to <#${targetChannel.id}>.`, ephemeral: true });
+            return textChannel.send(`No users connected to <#${targetChannel.id}>.`);
         }
 
         let disconnectedCount = 0;
@@ -51,10 +56,10 @@ module.exports = {
         }
 
         if (disconnectedCount === 0) {
-            return interaction.reply({ content: `No users could be disconnected from <#${targetChannel.id}>.`, ephemeral: true });
+            return textChannel.send(`No users could be disconnected from <#${targetChannel.id}>.`);
         }
 
-        await interaction.reply({ content: `Disconnected **${disconnectedCount}** user(s) from <#${targetChannel.id}>.`, ephemeral: false });
+        await textChannel.send(`Disconnected **${disconnectedCount}** user(s) from <#${targetChannel.id}>.`);
         if (textChannel && textChannel.id !== interaction.channelId) {
             textChannel.send(`Disconnected **${disconnectedCount}** user(s) from <#${targetChannel.id}>.`);
         }

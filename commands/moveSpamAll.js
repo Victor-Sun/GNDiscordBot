@@ -16,6 +16,11 @@ module.exports = {
   async execute(interaction) {
     const textChannel = interaction.channel;
 
+    // Acknowledge the interaction then delete the reply so the visible message
+    // is a normal channel message without the "Used /command" bar.
+    await interaction.reply({ content: ' ', ephemeral: true });
+    await interaction.deleteReply();
+
     // BotSettings gate
     let moveSpamEnabled = await BotSettings.findOne({
       name: commandName.moveSpamAll,

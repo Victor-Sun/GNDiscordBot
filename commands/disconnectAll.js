@@ -10,6 +10,11 @@ module.exports = {
         const guild = interaction.guild;
         const textChannel = interaction.channel;
 
+        // Acknowledge the interaction then delete the reply so the visible message
+        // is a normal channel message without the "Used /command" bar.
+        await interaction.reply({ content: ' ', ephemeral: true });
+        await interaction.deleteReply();
+
         // BotSettings gate
         let disconnectAllSetting = await BotSettings.findOne({ name: commandName.disconnectAll });
         if (!disconnectAllSetting) {
@@ -22,7 +27,7 @@ module.exports = {
         }
 
         if (!guild) {
-            return interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+            return textChannel.send('This command can only be used in a server.');
         }
 
         const channels = await guild.channels.fetch();
@@ -41,7 +46,7 @@ module.exports = {
         }
 
         if (membersToDisconnect.size === 0) {
-            return interaction.reply({ content: 'No users are connected to any voice channels.', ephemeral: true });
+            return textChannel.send('No users are connected to any voice channels.');
         }
 
         let disconnectedCount = 0;
@@ -58,9 +63,9 @@ module.exports = {
         }
 
         if (disconnectedCount === 0) {
-            return interaction.reply({ content: 'No users could be disconnected from voice channels.', ephemeral: true });
+            return textChannel.send('No users could be disconnected from voice channels.');
         }
 
-        await interaction.reply({ content: `Disconnected **${disconnectedCount}** user(s) from all voice channels.`, ephemeral: false });
+        await textChannel.send(`Disconnected **${disconnectedCount}** user(s) from all voice channels.`);
     }
 };

@@ -19,6 +19,11 @@ module.exports = {
 	async execute(interaction) {
         const textChannel = interaction.channel;
 
+        // Acknowledge the interaction then delete the reply so the visible message
+        // is a normal channel message without the "Used /command" bar.
+        await interaction.reply({ content: ' ', ephemeral: true });
+        await interaction.deleteReply();
+
         // BotSettings gate
         let moveSpamChannelSetting = await BotSettings.findOne({ name: commandName.moveSpamChannel });
         if (!moveSpamChannelSetting) {
@@ -33,7 +38,7 @@ module.exports = {
         const targetChannel = interaction.options.getChannel('channel');
 
         if (!targetChannel || targetChannel.type !== 'GUILD_VOICE') {
-            return interaction.reply('Please select a voice channel.');
+            return textChannel.send('Please select a voice channel.');
         }
 
         // Fetch all guild channels so we can pick random voice channels to move to
