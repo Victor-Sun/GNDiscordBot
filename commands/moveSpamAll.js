@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
         .setName('spammoveall')
         .setDescription('Spam move all users')
-        .addIntegerOptddddddion(amount => amount
+        .addIntegerOption(amount => amount
             .setName('amount')
             .setDescription('Amount of times to spam move')
             .setRequired(true)
