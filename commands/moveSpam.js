@@ -1,5 +1,6 @@
 const {  SlashCommandBuilder } = require('@discordjs/builders')
 const BotSettings = require('../models/BotSettings')
+const { messages, commandName } = require('../strings')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,17 +17,20 @@ module.exports = {
             .setRequired(true)
         ),
 	async execute(interaction) {
-        // const moveSpam = await BotSettings.findOne({ name: 'moveSpam'})
         const textChannel = interaction.channel
 
-        // if (!moveSpam) {
-        //     await BotSettings.insertMany({name: 'moveSpam', value: true})
-        // }
+        // BotSettings gate
+        let moveSpamSetting = await BotSettings.findOne({ name: commandName.moveSpam })
+        if (!moveSpamSetting) {
+            await BotSettings.insertMany({ name: commandName.moveSpam, value: true })
+            moveSpamSetting = await BotSettings.findOne({ name: commandName.moveSpam })
+        }
 
-        // if (moveSpam.value === false) {
-        //     textChannel.send('Command disabled')
-        // } else {
-            const channels = await interaction.member.guild.channels.fetch()
+        if (!moveSpamSetting.value) {
+            return textChannel.send(messages.commandDisabled)
+        }
+
+        const channels = await interaction.member.guild.channels.fetch()
             const victimId = interaction.options.getUser('user').id
             let moveAmount = interaction.options.getInteger('amount')
             
@@ -70,6 +74,5 @@ module.exports = {
             } else {
                 textChannel.send(`<@${victimId}> is not connected to a voice channel.`)
             }
-        // }
 	}
 }

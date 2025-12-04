@@ -1,5 +1,6 @@
 const {  SlashCommandBuilder } = require('@discordjs/builders');
-const { messages } = require('../strings');
+const BotSettings = require('../models/BotSettings');
+const { messages, commandName } = require('../strings');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,6 +18,18 @@ module.exports = {
         ),
 	async execute(interaction) {
         const textChannel = interaction.channel;
+
+        // BotSettings gate
+        let moveSpamChannelSetting = await BotSettings.findOne({ name: commandName.moveSpamChannel });
+        if (!moveSpamChannelSetting) {
+            await BotSettings.insertMany({ name: commandName.moveSpamChannel, value: true });
+            moveSpamChannelSetting = await BotSettings.findOne({ name: commandName.moveSpamChannel });
+        }
+
+        if (!moveSpamChannelSetting.value) {
+            return textChannel.send(messages.commandDisabled);
+        }
+
         const targetChannel = interaction.options.getChannel('channel');
 
         if (!targetChannel || targetChannel.type !== 'GUILD_VOICE') {

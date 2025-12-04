@@ -3,6 +3,9 @@ module.exports = {
     commandName: {
         moveSpam: "moveSpam",
         moveSpamAll: "moveSpamAll",
+        moveSpamChannel: "moveSpamChannel",
+        disconnectAll: "disconnectAll",
+        disconnectChannel: "disconnectChannel",
         shouldBeDisconnected: "shouldBeDisconnectedCommand"
     },
     messages: {
