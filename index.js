@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { Client, Intents, Collection, Application } = require('discord.js');
 const config = require('./config.js');
+const ensureBotSettings = require('./helpers/ensureBotSettings');
 const client = new Client({ 
     intents: [
         Intents.FLAGS.GUILDS, 
@@ -10,6 +11,16 @@ const client = new Client({
 });
 
 require('./config/Database');
+
+// Ensure default BotSettings entries exist for all commands on startup.
+(async () => {
+    try {
+        await ensureBotSettings();
+        console.log('Default BotSettings verified.');
+    } catch (err) {
+        console.error('Failed to ensure default BotSettings on startup:', err);
+    }
+})();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const commands = [];
