@@ -11,20 +11,23 @@ module.exports = {
             .setName('command')
             .setDescription('Command to configure')
             .setRequired(true)
-            .addChoices(
+            .addChoices([
                 ['spammove', commandName.moveSpam],
                 ['spammoveall', commandName.moveSpamAll],
                 ['spammovechannel', commandName.moveSpamChannel],
                 ['disconnectall', commandName.disconnectAll],
                 ['disconnectchannel', commandName.disconnectChannel],
                 ['disconnectuser', commandName.shouldBeDisconnected]
-            )
+            ])
         )
         .addIntegerOption(option => option
             .setName('enabled')
             .setDescription('1 = enabled, 0 = disabled')
             .setRequired(true)
-            .addChoices(['Enabled', 1], ['Disabled', 0])
+            .addChoices([
+                ['Enabled', 1],
+                ['Disabled', 0]
+            ])
         ),
 	async execute(interaction) {
         const commandKey = interaction.options.getString('command');
