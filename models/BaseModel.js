@@ -66,7 +66,17 @@ function createModel(tableName) {
       const setClause = setColumns.map((c) => `${c} = ?`).join(', ');
       const { where, params } = buildWhere(filter || {});
       const stmt = db.prepare(`UPDATE ${tableName} SET ${setClause} ${where}`);
-      const allParams = [...setColumns.map((c) => update[c]), ...params];
+
+      // Coerce booleans to integers so better-sqlite3 can bind them.
+      const setValues = setColumns.map((c) => {
+        const value = update[c];
+        if (typeof value === 'boolean') {
+          return value ? 1 : 0;
+        }
+        return value;
+      });
+
+      const allParams = [...setValues, ...params];
       const result = stmt.run(...allParams);
       return result;
     },

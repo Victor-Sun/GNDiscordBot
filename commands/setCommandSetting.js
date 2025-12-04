@@ -38,7 +38,7 @@ module.exports = {
         // Require editBotPerms permission
         const hasPerms = await BotPermissions.findOne({ name: permissionNames.editBotPerms, userId: commandRunner });
         if (!hasPerms || !hasPerms.value) {
-            return interaction.reply(messages.permissionDenied);
+            return interaction.reply({ content: messages.permissionDenied, ephemeral: true });
         }
 
         try {
@@ -50,10 +50,16 @@ module.exports = {
                 await BotSettings.updateOne({ name: commandKey }, { name: commandKey, value: enabled });
             }
 
-            return interaction.reply(`Setting for **${commandKey}** updated to **${enabled ? 'enabled' : 'disabled'}**.`);
+            return interaction.reply({
+                content: `Setting for **${commandKey}** updated to **${enabled ? 'enabled' : 'disabled'}**.`,
+                ephemeral: true,
+            });
         } catch (err) {
             console.error(err);
-            return interaction.reply('An error occurred while updating the command setting.');
+            return interaction.reply({
+                content: 'An error occurred while updating the command setting.',
+                ephemeral: true,
+            });
         }
     }
 };
