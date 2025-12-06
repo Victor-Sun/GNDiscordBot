@@ -18,7 +18,7 @@ module.exports = {
             interaction.reply('Word does not exist on the db.');
         } else {
             await WordReply.deleteOne({ word: word });
-            interaction.reply('Word and reply added to db');
+            interaction.reply('Word and reply from the db');
         }
 	}
 }
