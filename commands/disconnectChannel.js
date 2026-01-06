@@ -16,8 +16,6 @@ module.exports = {
 
         // Acknowledge the interaction then delete the reply so the visible message
         // is a normal channel message without the "Used /command" bar.
-        await interaction.reply({ content: ' ', ephemeral: true });
-        await interaction.deleteReply();
 
         // BotSettings gate
         let disconnectChannelSetting = await BotSettings.findOne({ name: commandName.disconnectChannel });
@@ -63,5 +61,6 @@ module.exports = {
         if (textChannel && textChannel.id !== interaction.channelId) {
             textChannel.send(`Disconnected **${disconnectedCount}** user(s) from <#${targetChannel.id}>.`);
         }
+        await interaction.deleteReply();
     }
 };
