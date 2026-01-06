@@ -23,15 +23,14 @@ function createModel(tableName) {
   return {
     async findOne(filter = {}) {
       const { where, params } = buildWhere(filter);
-      const stmt = db.prepare(`SELECT * FROM ${tableName} ${where} LIMIT 1`);
-      const row = stmt.get(...params);
-      return row || null;
+      const [rows] = await db.execute(`SELECT * FROM ${tableName} ${where} LIMIT 1`, params);
+      return rows[0] || null;
     },
 
     async find(filter = {}) {
       const { where, params } = buildWhere(filter);
-      const stmt = db.prepare(`SELECT * FROM ${tableName} ${where}`);
-      return stmt.all(...params);
+      const [rows] = await db.execute(`SELECT * FROM ${tableName} ${where}`, params);
+      return rows;
     },
 
     async insertMany(docs) {
@@ -40,10 +39,14 @@ function createModel(tableName) {
 
       const columns = Object.keys(rows[0]);
       const placeholders = columns.map(() => '?').join(', ');
-      const stmt = db.prepare(`INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${placeholders})`);
+      const query = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
 
-      const insert = db.transaction((items) => {
-        for (const item of items) {
+      // Use a transaction for multiple inserts
+      const connection = await db.getConnection();
+      try {
+        await connection.beginTransaction();
+        
+        for (const item of rows) {
           const values = columns.map((c) => {
             const value = item[c];
             if (typeof value === 'boolean') {
@@ -51,23 +54,26 @@ function createModel(tableName) {
             }
             return value;
           });
-          console.log(stmt)
-          stmt.run(values);
+          await connection.execute(query, values);
         }
-      });
-
-      insert(rows);
+        
+        await connection.commit();
+      } catch (error) {
+        await connection.rollback();
+        throw error;
+      } finally {
+        connection.release();
+      }
     },
 
     async updateOne(filter, update) {
-      if (!update || Object.keys(update).length === 0) return { changes: 0 };
+      if (!update || Object.keys(update).length === 0) return { affectedRows: 0 };
 
       const setColumns = Object.keys(update);
       const setClause = setColumns.map((c) => `${c} = ?`).join(', ');
       const { where, params } = buildWhere(filter || {});
-      const stmt = db.prepare(`UPDATE ${tableName} SET ${setClause} ${where}`);
 
-      // Coerce booleans to integers so better-sqlite3 can bind them.
+      // Coerce booleans to integers
       const setValues = setColumns.map((c) => {
         const value = update[c];
         if (typeof value === 'boolean') {
@@ -77,21 +83,19 @@ function createModel(tableName) {
       });
 
       const allParams = [...setValues, ...params];
-      const result = stmt.run(...allParams);
+      const [result] = await db.execute(`UPDATE ${tableName} SET ${setClause} ${where}`, allParams);
       return result;
     },
 
     async deleteOne(filter) {
       const { where, params } = buildWhere(filter || {});
-      const stmt = db.prepare(`DELETE FROM ${tableName} ${where}`);
-      const result = stmt.run(...params);
+      const [result] = await db.execute(`DELETE FROM ${tableName} ${where}`, params);
       return result;
     },
 
     async deleteMany(filter) {
       const { where, params } = buildWhere(filter || {});
-      const stmt = db.prepare(`DELETE FROM ${tableName} ${where}`);
-      const result = stmt.run(...params);
+      const [result] = await db.execute(`DELETE FROM ${tableName} ${where}`, params);
       return result;
     },
 

@@ -11,7 +11,7 @@ module.exports = {
     messages: {
         commandDisabled: "Command currently disabled",
         commandReceived: "Command received",
-        everyoneGivenAids: "Everyone has been given Aids!",
+        everyoneGivenAids: "Everyone has been given Aids! ඞ",
         permissionDenied: "You don't have permissions to run this command!",
         permissionAdded: "Permission Added",
         permissionUpdated: "Permission Updated",

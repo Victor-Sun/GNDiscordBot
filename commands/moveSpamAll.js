@@ -59,8 +59,6 @@ module.exports = {
         }
       }
 
-      let moveSuccess = true;
-
       if (interaction.guild.members.cache.get(victimId).voice.channel) {
         let moveCount = 0;
         while (moveCount < moveAmount) {
@@ -79,11 +77,9 @@ module.exports = {
                 moveCount++;
               }
             } else {
-              moveSuccess = false;
               break;
             }
           } else {
-            moveSuccess = false;
             break;
           }
         }

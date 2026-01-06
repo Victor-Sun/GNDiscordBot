@@ -66,8 +66,6 @@ module.exports = {
                 }
             }
 
-            let moveSuccess = true;
-
             if (interaction.guild.members.cache.get(victimId).voice.channel) {
                 let moveCount = 0;
                 while (moveCount < moveAmount) {
@@ -82,19 +80,16 @@ module.exports = {
                                 moveCount++;
                             }
                         } else {
-                            moveSuccess = false;
                             break;
                         }
                     } else {
-                        moveSuccess = false;
                         break;
                     }
                 }
             } else {
-                moveSuccess = false;
+                textChannel.send(`There are no users in the channel <#${targetChannel.id}> dummy.囧`);
             }
         });
-
-        textChannel.send(`All users in <#${targetChannel.id}> have been given aids.`);
+        textChannel.send(`All users in <#${targetChannel.id}> have been given aids. ඞ`);
     }
 };
