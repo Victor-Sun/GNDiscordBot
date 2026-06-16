@@ -10,12 +10,18 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch (err) {
-            if(err) console.error(err)
+            if (err) console.error(err);
 
-            await interaction.reply({
+            const errorMessage = {
                 content: 'An error occured while executing that command.',
-                ephemeral: true
-            })
+                ephemeral: true,
+            };
+
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage).catch(() => {});
+            } else {
+                await interaction.reply(errorMessage).catch(() => {});
+            }
         }
     },
 };
