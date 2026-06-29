@@ -24,7 +24,11 @@ module.exports = {
 			.setFooter({ text: `Announced by ${interaction.user.tag}` })
 			.setTimestamp();
 
-		await interaction.channel.send({ embeds: [embed] });
+		await interaction.channel.send({
+			content: '@everyone',
+			embeds: [embed],
+			allowedMentions: { parse: ['everyone'] },
+		});
 		await interaction.reply({ content: 'Announcement posted.', ephemeral: true });
 	},
 };
