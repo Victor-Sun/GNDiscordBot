@@ -22,6 +22,7 @@ const config = {
     PUTIO_CLIENT_OAUTH:process.env.PUTIO_CLIENT_OAUTH,
     PUTIO_USERNAME:process.env.PUTIO_USERNAME,
     PUTIO_PASSWORD:process.env.PUTIO_PASSWORD,
+    OPENAI_API_KEY:process.env.OPENAI_API_KEY,
 }
 
 module.exports = config
