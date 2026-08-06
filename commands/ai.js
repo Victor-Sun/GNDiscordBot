@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const OpenAI = require('openai');
 const config = require('../config.js');
 
+const MODEL = 'gpt-5.6-luna';
 const DISCORD_MESSAGE_LIMIT = 2000;
 
 function truncateForDiscord(text) {
@@ -35,13 +36,17 @@ module.exports = {
         await interaction.deferReply();
 
         try {
-            const completion = await openai.chat.completions.create({
-                model: 'gpt-4o-mini',
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: 500,
-            });
+            const request = {
+                model: MODEL,
+                input: prompt,
+                max_output_tokens: 500,
+            };
+            
+            request.tools = [{ type: 'web_search' }];
+            request.tool_choice = 'required';
 
-            const reply = completion.choices[0]?.message?.content;
+            const response = await openai.responses.create(request);
+            const reply = response.output_text;
 
             if (!reply) {
                 return interaction.editReply('The AI returned an empty response.');
