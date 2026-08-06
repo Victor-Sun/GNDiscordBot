@@ -49,10 +49,11 @@ module.exports = {
             const reply = response.output_text;
 
             if (!reply) {
-                return interaction.editReply('The AI returned an empty response.');
+                return interaction.editReply(`The AI returned an empty response for your prompt: ${prompt}`);
             }
 
-            await interaction.editReply(truncateForDiscord(reply));
+            const responseMessage = `Prompt: ${prompt}\n\n${reply}`;
+            await interaction.editReply(truncateForDiscord(responseMessage));
         } catch (err) {
             console.error('ai command failed:', err);
             await interaction.editReply('Something went wrong talking to the AI.');

@@ -7,6 +7,10 @@ module.exports = {
 
         if (!command) return;
 
+        const guildName = interaction.guild?.name || 'DM';
+        const channelName = interaction.channel?.name || 'DM';
+        console.log(`[COMMAND] ${interaction.commandName} used by ${interaction.user.tag} (${interaction.user.id}) in ${guildName}/${channelName}`);
+
         try {
             await command.execute(interaction);
         } catch (err) {
