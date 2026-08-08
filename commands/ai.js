@@ -39,7 +39,7 @@ module.exports = {
             const request = {
                 model: MODEL,
                 input: prompt,
-                max_output_tokens: 500,
+                max_output_tokens: 5000,
             };
             
             request.tools = [{ type: 'web_search' }];
