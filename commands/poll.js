@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const REACTIONS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
 
@@ -42,7 +41,7 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setColor('#5865F2')
 			.setTitle('📊 Poll')
 			.setDescription(`**${question}**\n\n${optionList}\n\nReact to vote!`)

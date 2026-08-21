@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 const BotSettings = require('../models/BotSettings');
 const BotPermissions = require('../models/BotPermissions');
 const { messages, permissionNames, commandName } = require('../strings');
@@ -11,23 +11,23 @@ module.exports = {
             .setName('command')
             .setDescription('Command to configure')
             .setRequired(true)
-            .addChoices([
-                ['spammove', commandName.moveSpam],
-                ['spammoveall', commandName.moveSpamAll],
-                ['spammovechannel', commandName.moveSpamChannel],
-                ['disconnectall', commandName.disconnectAll],
-                ['disconnectchannel', commandName.disconnectChannel],
-                ['disconnectuser', commandName.shouldBeDisconnected]
-            ])
+            .addChoices(
+                { name: 'spammove', value: commandName.moveSpam },
+                { name: 'spammoveall', value: commandName.moveSpamAll },
+                { name: 'spammovechannel', value: commandName.moveSpamChannel },
+                { name: 'disconnectall', value: commandName.disconnectAll },
+                { name: 'disconnectchannel', value: commandName.disconnectChannel },
+                { name: 'disconnectuser', value: commandName.shouldBeDisconnected },
+            )
         )
         .addIntegerOption(option => option
             .setName('enabled')
             .setDescription('1 = enabled, 0 = disabled')
             .setRequired(true)
-            .addChoices([
-                ['Enabled', 1],
-                ['Disabled', 0]
-            ])
+            .addChoices(
+                { name: 'Enabled', value: 1 },
+                { name: 'Disabled', value: 0 },
+            )
         ),
 	async execute(interaction) {
         const commandKey = interaction.options.getString('command');
@@ -35,7 +35,6 @@ module.exports = {
         const enabled = !!enabledInt;
         const commandRunner = interaction.user.id;
 
-        // Require editBotPerms permission
         const hasPerms = await BotPermissions.findOne({ name: permissionNames.editBotPerms, userId: commandRunner });
         if (!hasPerms || !hasPerms.value) {
             return interaction.reply({ content: messages.permissionDenied, ephemeral: true });

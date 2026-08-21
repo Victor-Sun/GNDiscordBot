@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const BotSettings = require('../models/BotSettings');
 const { messages, commandName } = require('../strings');
 
@@ -34,7 +34,7 @@ module.exports = {
         const membersToDisconnect = new Map();
 
         for (const channel of channels.values()) {
-            if (channel.type === 'GUILD_VOICE') {
+            if (channel.type === ChannelType.GuildVoice) {
                 for (const member of channel.members.values()) {
                     if (member && member.id && !membersToDisconnect.has(member.id)) {
                         membersToDisconnect.set(member.id, member);

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 const { getBlizzardApiKey } = require('../helpers/AuthHelpers.js');
 const fetch = require("node-fetch");
 

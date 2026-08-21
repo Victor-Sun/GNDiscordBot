@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const BotSettings = require("../models/BotSettings");
 // const BotPermissions = require('../models/BotPermissions')
 const { messages, commandName } = require("../strings");
@@ -36,7 +36,7 @@ module.exports = {
     const channels = await interaction.member.guild.channels.fetch();
     const connectedUserIds = [];
     for (const ch of channels) {
-      if (ch[1].type === "GUILD_VOICE") {
+      if (ch[1].type === ChannelType.GuildVoice) {
         ch[1].members.map((memberList) => {
           if (memberList.user) {
             connectedUserIds.push(memberList.user.id);
@@ -54,7 +54,7 @@ module.exports = {
 
       const channelIds = [];
       for (const channel of channels.values()) {
-        if (channel.type === "GUILD_VOICE") {
+        if (channel.type === ChannelType.GuildVoice) {
           channelIds.push(channel.id);
         }
       }

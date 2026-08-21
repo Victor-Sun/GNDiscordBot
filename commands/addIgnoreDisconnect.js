@@ -1,4 +1,4 @@
-const {  SlashCommandBuilder } = require('@discordjs/builders')
+const {  SlashCommandBuilder } = require('discord.js')
 const IgnoreDisconnect = require('../models/IgnoreDisconnect')
 const { messages, permissionNames } = require('../strings')
 const BotPermissions = require('../models/BotPermissions')

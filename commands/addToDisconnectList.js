@@ -1,4 +1,4 @@
-const {  SlashCommandBuilder } = require('@discordjs/builders')
+const {  SlashCommandBuilder } = require('discord.js')
 const ShouldBeDisconnected = require('../models/ShouldBeDisconnected')
 const BotSettings = require('../models/BotSettings')
 const BotPermissions = require('../models/BotPermissions')

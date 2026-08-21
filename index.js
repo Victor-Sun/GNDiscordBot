@@ -1,18 +1,19 @@
 const fs = require('fs');
-const { Client, Intents, Collection, Application } = require('discord.js');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const config = require('./config.js');
 const ensureBotSettings = require('./helpers/ensureBotSettings');
-const client = new Client({ 
+
+const client = new Client({
     intents: [
-        Intents.FLAGS.GUILDS, 
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_VOICE_STATES
-    ] 
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.MessageContent,
+    ],
 });
 
 require('./config/Database');
 
-// Ensure default BotSettings entries exist for all commands on startup.
 (async () => {
     try {
         await ensureBotSettings();

@@ -1,4 +1,4 @@
-const {  SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder, ChannelType } = require('discord.js')
 const BotSettings = require('../models/BotSettings')
 const { messages, commandName } = require('../strings')
 
@@ -40,7 +40,7 @@ module.exports = {
     
             const channelIds = []
             for (const channel of channels.values()) {
-                if(channel.type === 'GUILD_VOICE') {
+                if (channel.type === ChannelType.GuildVoice) {
                     channelIds.push(channel.id)
                 }
             }

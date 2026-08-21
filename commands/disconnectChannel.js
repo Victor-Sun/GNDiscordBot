@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const BotSettings = require('../models/BotSettings');
 const { messages, commandName } = require('../strings');
 
@@ -9,6 +9,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('channel')
             .setDescription('Voice channel whose members will be disconnected')
+            .addChannelTypes(ChannelType.GuildVoice)
             .setRequired(true)
         ),
 	async execute(interaction) {
@@ -30,7 +31,7 @@ module.exports = {
 
         const targetChannel = interaction.options.getChannel('channel');
 
-        if (!targetChannel || targetChannel.type !== 'GUILD_VOICE') {
+        if (!targetChannel || targetChannel.type !== ChannelType.GuildVoice) {
             return textChannel.send('Please select a voice channel.');
         }
 

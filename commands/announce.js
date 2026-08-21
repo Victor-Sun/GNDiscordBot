@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,7 +16,7 @@ module.exports = {
 		const title = interaction.options.getString('title') ?? 'Announcement';
 		const message = interaction.options.getString('message');
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setColor('#5865F2')
 			.setTitle(title)
 			.setDescription(message)
